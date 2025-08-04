@@ -15,7 +15,7 @@ type StaticInfo struct {
 	Properties     []float64
 }
 
-func ParseStaticFile(path string) (StaticInfo, error) {
+func parseStaticFile(path string) (StaticInfo, error) {
 	file, err := os.Open(path)
 	if err != nil {
 		return StaticInfo{}, fmt.Errorf("failed to open static file: %w", err)

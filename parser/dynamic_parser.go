@@ -14,7 +14,7 @@ type TimeStep struct {
 	Particles []types.Particle
 }
 
-func ParseDynamicFile(path string, staticInfo StaticInfo) ([]TimeStep, error) {
+func parseDynamicFile(path string, staticInfo StaticInfo) ([]TimeStep, error) {
 	file, err := os.Open(path)
 	if err != nil {
 		return nil, fmt.Errorf("failed to open dynamic file: %w", err)
