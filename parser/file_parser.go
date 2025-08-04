@@ -9,7 +9,7 @@ func ParseFiles() ([]TimeStep, error) {
 		panic(err)
 	}
 
-	timeSteps, err := parseDynamicFile(dynamicFile, staticInfo)
+	timeSteps, err := parseDynamicFile(dynamicFile, *staticInfo)
 	if err != nil {
 		panic(err)
 	}
