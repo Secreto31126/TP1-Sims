@@ -1,6 +1,6 @@
 package parser
 
-func ParseFiles() ([]TimeStep, error) {
+func ParseFiles() ([]TimeStep, *StaticInfo, error) {
 	staticFile := "./files/Static100.txt"
 	dynamicFile := "./files/Dynamic100.txt"
 
@@ -14,5 +14,5 @@ func ParseFiles() ([]TimeStep, error) {
 		panic(err)
 	}
 
-	return timeSteps, nil
+	return timeSteps, staticInfo, nil
 }
