@@ -124,12 +124,8 @@ func processParticle(M int, Rc float64, cells [][][]*types.Particle, jobs <-chan
 }
 
 func output(list []*types.Particle) {
-	// for _, p := range list {
-	// 	fmt.Printf("%f %f %f\n", p.Radius, p.X, p.Y)
-	// }
-
 	for _, p := range list {
-		fmt.Printf("%d", p.Id)
+		fmt.Printf("%f %f %f\n%d", p.Radius, p.X, p.Y, p.Id)
 		for _, neighbor := range p.Neighbors {
 			fmt.Printf("\t%d", neighbor.Id)
 		}
