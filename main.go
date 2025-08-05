@@ -83,8 +83,9 @@ func processParticle(M int, Rc float64, cells [][][]*types.Particle, particle *t
 
 		for _, other := range cells[x][y] {
 			if (!self_quadrant || particle.Id < other.Id) && particle.BorderDistanceTo(other) < Rc {
-				particle.Neighbors = append(particle.Neighbors, other)
-				other.Neighbors = append(other.Neighbors, particle)
+				// This fortunately doesn't cause a deadlock
+				particle.AddNeighbor(other)
+				other.AddNeighbor(particle)
 			}
 		}
 	}
