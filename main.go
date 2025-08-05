@@ -41,7 +41,7 @@ func main() {
 	}
 }
 
-func processList(list []types.Particle, L float64, M int, Rc float64) {
+func processList(list []*types.Particle, L float64, M int, Rc float64) {
 	var cells [][]([]*types.Particle)
 	for i := range M {
 		cells = append(cells, make([][]*types.Particle, M))
@@ -51,7 +51,7 @@ func processList(list []types.Particle, L float64, M int, Rc float64) {
 	}
 
 	for i := range list {
-		p := &list[i]
+		p := list[i]
 		cellX := int(p.X / (L / float64(M)))
 		cellY := int(p.Y / (L / float64(M)))
 
@@ -90,7 +90,7 @@ func processParticle(M int, Rc float64, cells [][][]*types.Particle, particle *t
 	}
 }
 
-func output(list []types.Particle) {
+func output(list []*types.Particle) {
 	// for _, p := range list {
 	// 	fmt.Printf("%f %f %f\n", p.Radius, p.X, p.Y)
 	// }

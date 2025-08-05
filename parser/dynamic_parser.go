@@ -11,7 +11,7 @@ import (
 
 type TimeStep struct {
 	Time      float64
-	Particles []types.Particle
+	Particles []*types.Particle
 }
 
 func parseDynamicFile(path string, staticInfo StaticInfo) ([]TimeStep, error) {
@@ -31,7 +31,7 @@ func parseDynamicFile(path string, staticInfo StaticInfo) ([]TimeStep, error) {
 			return nil, fmt.Errorf("expected time value, got: %s", timeLine)
 		}
 
-		particles := make([]types.Particle, staticInfo.TotalParticles)
+		particles := make([]*types.Particle, staticInfo.TotalParticles)
 		for i := 0; i < staticInfo.TotalParticles; i++ {
 			if !scanner.Scan() {
 				return nil, fmt.Errorf("incomplete particle data at time %.2f", timeVal)
@@ -43,13 +43,7 @@ func parseDynamicFile(path string, staticInfo StaticInfo) ([]TimeStep, error) {
 			x, _ := strconv.ParseFloat(fields[0], 64)
 			y, _ := strconv.ParseFloat(fields[1], 64)
 
-			particles[i] = types.Particle{
-				Id:       i,
-				X:        x,
-				Y:        y,
-				Radius:   staticInfo.Radii[i],
-				Property: staticInfo.Properties[i],
-			}
+			particles[i] = types.NewParticle(i, x, y, staticInfo.Radii[i], staticInfo.Properties[i])
 		}
 		timeSteps = append(timeSteps, TimeStep{Time: timeVal, Particles: particles})
 	}

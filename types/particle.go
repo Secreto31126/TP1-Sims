@@ -10,6 +10,17 @@ type Particle struct {
 	Neighbors []*Particle // Vecinos de la particula
 }
 
+func NewParticle(id int, x, y, radius, property float64) *Particle {
+	return &Particle{
+		Id:        id,
+		X:         x,
+		Y:         y,
+		Radius:    radius,
+		Property:  property,
+		Neighbors: make([]*Particle, 0),
+	}
+}
+
 func (p Particle) BorderDistanceTo(other *Particle) float64 {
 	dx := p.X - other.X
 	dy := p.Y - other.Y
