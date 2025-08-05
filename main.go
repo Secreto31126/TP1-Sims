@@ -5,10 +5,16 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"sync"
 
 	"TP1-Sims/parser"
 	"TP1-Sims/types"
 )
+
+type Job struct {
+	types.Coordinate
+	Particle *types.Particle
+}
 
 func main() {
 	if len(os.Args) < 3 {
@@ -58,34 +64,56 @@ func processList(list []*types.Particle, L float64, M int, Rc float64) {
 		cells[cellX][cellY] = append(cells[cellX][cellY], p)
 	}
 
+	var wg sync.WaitGroup
+	jobs := make(chan Job, len(list))
+
+	for range 1000 {
+		wg.Add(1)
+
+		go func() {
+			defer wg.Done()
+			processParticle(M, Rc, cells, jobs)
+		}()
+	}
+
 	for i := range cells {
 		for j := range cells[i] {
 			for _, particle := range cells[i][j] {
-				processParticle(M, Rc, cells, particle, i, j)
+				jobs <- Job{
+					Coordinate: types.Coordinate{X: i, Y: j},
+					Particle:   particle,
+				}
 			}
 		}
 	}
+
+	close(jobs)
+	wg.Wait()
 }
 
-func processParticle(M int, Rc float64, cells [][][]*types.Particle, particle *types.Particle, i, j int) {
-	neighbors := []types.Coordinate{
-		{X: i - 1, Y: j - 1}, {X: i - 1, Y: j}, {X: i - 1, Y: j + 1},
-		{X: i, Y: j - 1}, {X: i, Y: j},
-	}
+func processParticle(M int, Rc float64, cells [][][]*types.Particle, jobs <-chan Job) {
+	for job := range jobs {
+		i, j, particle := job.X, job.Y, job.Particle
 
-	for curr, coord := range neighbors {
-		x, y := coord.X, coord.Y
-		self_quadrant := curr == 4
-
-		if x < 0 || x >= M || y < 0 || y >= M {
-			continue
+		neighbors := []types.Coordinate{
+			{X: i - 1, Y: j - 1}, {X: i - 1, Y: j}, {X: i - 1, Y: j + 1},
+			{X: i, Y: j - 1}, {X: i, Y: j},
 		}
 
-		for _, other := range cells[x][y] {
-			if (!self_quadrant || particle.Id < other.Id) && particle.BorderDistanceTo(other) < Rc {
-				// This fortunately doesn't cause a deadlock
-				particle.AddNeighbor(other)
-				other.AddNeighbor(particle)
+		for curr, coord := range neighbors {
+			x, y := coord.X, coord.Y
+			self_quadrant := curr == 4
+
+			if x < 0 || x >= M || y < 0 || y >= M {
+				continue
+			}
+
+			for _, other := range cells[x][y] {
+				if (!self_quadrant || particle.Id < other.Id) && particle.BorderDistanceTo(other) < Rc {
+					// This fortunately doesn't cause a deadlock
+					particle.AddNeighbor(other)
+					other.AddNeighbor(particle)
+				}
 			}
 		}
 	}
