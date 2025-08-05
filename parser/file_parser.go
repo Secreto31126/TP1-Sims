@@ -2,9 +2,9 @@ package parser
 
 import "fmt"
 
-func ParseFiles() ([]TimeStep, *StaticInfo, error) {
-	staticFile := "./files/Static100.txt"
-	dynamicFile := "./files/Dynamic100.txt"
+func ParseFiles(size string) ([]TimeStep, *StaticInfo, error) {
+	staticFile := "./files/Static" + size + ".txt"
+	dynamicFile := "./files/Dynamic" + size + ".txt"
 
 	staticInfo, err := parseStaticFile(staticFile)
 	if err != nil {

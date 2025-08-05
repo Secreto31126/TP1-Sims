@@ -17,7 +17,7 @@ type Job struct {
 }
 
 func main() {
-	if len(os.Args) < 3 {
+	if len(os.Args) < 4 {
 		fmt.Print("Usage: go run main.go <M> <Rc> <Size>")
 		os.Exit(1)
 	}
@@ -34,7 +34,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	timestamps, info, err := parser.ParseFiles()
+	timestamps, info, err := parser.ParseFiles(os.Args[3])
 	if err != nil {
 		fmt.Printf("Error parsing files: %v", err)
 		os.Exit(1)
