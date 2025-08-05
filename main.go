@@ -61,13 +61,13 @@ func processList(list []types.Particle, L float64, M int, Rc float64) {
 	for i := range cells {
 		for j := range cells[i] {
 			for _, particle := range cells[i][j] {
-				processParticle(M, Rc, particle, cells, i, j)
+				processParticle(M, Rc, cells, particle, i, j)
 			}
 		}
 	}
 }
 
-func processParticle(M int, Rc float64, particle *types.Particle, cells [][][]*types.Particle, i, j int) {
+func processParticle(M int, Rc float64, cells [][][]*types.Particle, particle *types.Particle, i, j int) {
 	neighbors := []types.Coordinate{
 		{X: i - 1, Y: j - 1}, {X: i - 1, Y: j}, {X: i - 1, Y: j + 1},
 		{X: i, Y: j - 1}, {X: i, Y: j},
