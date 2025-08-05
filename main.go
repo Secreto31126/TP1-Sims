@@ -18,22 +18,26 @@ type Job struct {
 
 func main() {
 	if len(os.Args) < 3 {
-		log.Fatal("Usage: go run main.go <M> <Rc>")
+		fmt.Print("Usage: go run main.go <M> <Rc> <Size>")
+		os.Exit(1)
 	}
 
 	M, err := strconv.Atoi(os.Args[1])
 	if err != nil {
-		log.Fatalf("Invalid M value: %v", err)
+		fmt.Printf("Invalid M value: %v", err)
+		os.Exit(1)
 	}
 
 	Rc, err := strconv.ParseFloat(os.Args[2], 64)
 	if err != nil {
-		log.Fatalf("Invalid Rc value: %v", err)
+		fmt.Printf("Invalid Rc value: %v", err)
+		os.Exit(1)
 	}
 
 	timestamps, info, err := parser.ParseFiles()
 	if err != nil {
-		log.Fatalf("Error parsing files: %v", err)
+		fmt.Printf("Error parsing files: %v", err)
+		os.Exit(1)
 	}
 
 	for _, ts := range timestamps {
