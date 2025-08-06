@@ -1,0 +1,21 @@
+Static File:
+N       (Heading con el Nro. total de Partículas)
+L       (Longitud del lado del área de simulación)
+r1 pr1  (radio y propiedad de la partícula 1)
+r2 pr2  (radio y propiedad de la partícula 2)
+... hasta n
+====================================================
+Dinamic File:
+t0               (tiempo)
+x1 y1 vx1 vy1   (partícula 1)
+x2 y2 vx2 vy2   (partícula 2)
+....
+xN yN vxN vyN   (partícula N)
+t1 (tiempo)
+x1 y1 vx1 vy1   (partícula 1)
+x2 y2 vx2 vy2   (partícula 2)
+....
+xN yN vxN vyN   (partícula N)
+========================================================
+Neighbors:
+id Neighbors    (id de particula 1, sus vecinos )
