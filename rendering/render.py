@@ -1,72 +1,53 @@
 import matplotlib.pyplot as plt
 from classes import Particle
 
-def read_static_data(filename):
-    """Reads particle properties (radius, x, y)"""
+def read_particle_data(filename):
+    """Reads particle data in alternating format (properties then neighbors)"""
     particles = []
-    with open(filename, 'r') as file:
-        for line in file:
-            # Skip empty lines
-            if not line.strip():
-                continue
-            # Parse radius, x, y
-            radius, x, y = map(float, line.strip().split())
-            particles.append(Particle(x, y, radius))
-    return particles
-
-def read_neighbors(filename):
-    """Reads neighbor lists (id, neighbor1, neighbor2, ...)"""
     neighbors = {}
+    
     with open(filename, 'r') as file:
-        for line in file:
-            # Skip empty lines
-            if not line.strip():
-                continue
-            # Parse id and neighbors
-            parts = list(map(int, line.strip().split()))
-            particle_id = parts[0]
-            neighbor_ids = parts[1:]
+
+        #skips empty lines
+        lines = [line.strip() if line.strip() != '' else '' for line in file]
+        
+        # Process pairs of lines (particle properties + neighbors)
+        for i in range(0, len(lines), 2):
+            if i+1 >= len(lines):
+                break  # In case file has odd number of lines
+            
+            # Parse particle properties
+            prop_line = lines[i]
+            radius, x, y = map(float, prop_line.split())
+            particle_id = i // 2  # ID based on position in file
+            particles.append(Particle(x, y, radius, id=particle_id))
+            
+            # Parse neighbors
+            neighbor_line = lines[i+1]
+            neighbor_ids = list(map(int, neighbor_line.split())) if neighbor_line else []
             neighbors[particle_id] = neighbor_ids
-    return neighbors
 
-def read_dynamic_data(filename, particles):
-    """Updates particles with neighbor information"""
-    neighbors = read_neighbors(filename)
-    for particle_id, neighbor_ids in neighbors.items():
-        if 0 <= particle_id < len(particles):
-            particles[particle_id].id = particle_id
-            particles[particle_id].neighbors = neighbor_ids
-    return particles
+    
+    return particles, neighbors
 
-def plot_particles(particles, focused_id=None):
+def plot_particles(particles, focused_neighbors, focused_id=0):
     """Visualizes particles with optional focus on one particle"""
-    plt.figure(figsize=(10, 10))
+    plt.figure(figsize=(8, 8))
     
     # Plot all particles
     for particle in particles:
+        if(particle.id == focused_id):
+            particle_color = 'red'
+        elif(particle.id in focused_neighbors):
+            particle_color = 'blue'
+        else:
+            particle_color = 'grey'
+
         circle = plt.Circle((particle.x, particle.y), particle.radius, 
-                          fill=False, color='blue')
-        plt.gca().add_patch(circle)
-        plt.text(particle.x, particle.y, str(particle.id), 
-                ha='center', va='center')
-    
-    # Highlight focused particle if specified
-    if focused_id is not None and 0 <= focused_id < len(particles):
-        focused = particles[focused_id]
-        circle = plt.Circle((focused.x, focused.y), focused.radius, 
-                          fill=True, color='red', alpha=0.3)
+                          fill=False, color=particle_color)
         plt.gca().add_patch(circle)
         
-        # Draw lines to neighbors
-        if hasattr(focused, 'neighbors'):
-            for neighbor_id in focused.neighbors:
-                if 0 <= neighbor_id < len(particles):
-                    neighbor = particles[neighbor_id]
-                    plt.plot([focused.x, neighbor.x], 
-                            [focused.y, neighbor.y], 
-                            'r--', alpha=0.3)
-    
-    plt.title('Particle System Visualization')
+    plt.title('Particle Playground')
     plt.xlabel('X position')
     plt.ylabel('Y position')
     plt.axis('equal')
@@ -76,12 +57,11 @@ def plot_particles(particles, focused_id=None):
 
 # Example usage:
 if __name__ == "__main__":
-    # Read particle properties (static data)
-    particles = read_static_data('particles.txt')
-    
-    # Read and assign neighbor information (dynamic data)
-    particles = read_dynamic_data('neighbors.txt', particles)
-    
+    # Read all data from single file in alternating format
+    path = input('Enter the path of the file relative to the project root: ')
+    print(path)
+    particles, neighbors = read_particle_data(path)
+    print(f"Read {len(particles)} particles from {path}")
     # Visualize
     focused_id = int(input('Enter the ID of the focused particle: '))
-    plot_particles(particles, focused_id)
+    plot_particles(particles,neighbors[focused_id], focused_id)

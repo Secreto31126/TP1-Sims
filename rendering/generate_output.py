@@ -40,16 +40,14 @@ def find_neighbors(particles):
     return particles
 
 def write_output_file(particles, filename="output.txt"):
-    """Write data in the specified format"""
+    """Write data in alternating particle/neighbors format"""
     with open(filename, 'w') as f:
-        # Write particle properties
         for p in particles:
+            # Write particle properties
             f.write(f"{p['radius']} {p['x']} {p['y']}\n")
-        
-        # Write neighbor lists
-        for p in particles:
+            # Write neighbors immediately after
             neighbors = ' '.join(map(str, p['neighbors']))
-            f.write(f"{p['id']} {neighbors}\n")
+            f.write(f"{neighbors}\n")
 
 if __name__ == "__main__":
     print("Generating test data...")
@@ -57,4 +55,8 @@ if __name__ == "__main__":
     particles = find_neighbors(particles)
     write_output_file(particles)
     print(f"Generated {PARTICLE_COUNT} particles in output.txt")
-    print(f"Example first particle: {particles[0]}")
+    print(f"Example format:")
+    print("0.35 12.4 8.2")
+    print("1 42 87")
+    print("0.28 5.6 18.3")
+    print("0 203")
