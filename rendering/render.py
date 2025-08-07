@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 from classes import Particle
+import numpy as np
 
 def read_particle_data(filename):
     """Reads particle data in alternating format (properties then neighbors)"""
@@ -30,7 +31,7 @@ def read_particle_data(filename):
     
     return particles, neighbors
 
-def plot_particles(particles, focused_neighbors, focused_id=0):
+def plot_particles(particles, focused_neighbors, focused_id=0, square_size=5, L=10):
     """Redrawable particle visualization"""
     plt.clf()  # Clear previous plot instead of making new windows
     
@@ -39,7 +40,10 @@ def plot_particles(particles, focused_neighbors, focused_id=0):
         plt.figure(figsize=(13, 13))
         plt.ion()  # Turn on interactive mode
         plt.show()
-    
+    ax = plt.gca()
+    ax.set_xticks(np.arange(0, L, square_size))
+    ax.set_yticks(np.arange(0, L, square_size))
+    ax.grid(True, linestyle='--', linewidth=0.5)
     # Plot all particles
     for particle in particles:
         color = 'red' if particle.id == focused_id else \
@@ -48,7 +52,8 @@ def plot_particles(particles, focused_neighbors, focused_id=0):
         
         circle = plt.Circle((particle.x, particle.y), particle.radius,
                           fill=False, color=color, linewidth=1)
-        plt.gca().add_patch(circle)
+        
+        ax.add_patch(circle)
     
     plt.title(f'Focused: {focused_id} | Neighbors: {len(focused_neighbors)}')
     plt.xlabel('X position')
@@ -64,6 +69,9 @@ if __name__ == "__main__":
     
     # Data loading (unchanged)
     path = input('Enter the path of the file relative to the project root: ')
+    M = int(input('Grid number M: ').strip() if not '' else '10')
+    L = int(input('Contour size L: ') if not '' else '10')
+
     particles, neighbors = read_particle_data(path)
     print(f"Read {len(particles)} particles")
     
@@ -75,7 +83,7 @@ if __name__ == "__main__":
         
         try:
             focused_id = int(inputstr)
-            plot_particles(particles, neighbors.get(focused_id, []), focused_id)
+            plot_particles(particles, neighbors.get(focused_id, []), focused_id, np.floor(L/M), L)
         except ValueError:
             print("Please enter a valid number or 'exit'")
     
