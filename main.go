@@ -145,7 +145,6 @@ func processBruteForce(particles []*types.Particle, Rc float64, loop bool, L flo
 
 				dist := pi.BorderDistanceTo(pj)
 				if loop {
-					// Apply minimum image convention for wrapping
 					dx := math.Abs(pi.X - pj.X)
 					if dx > L/2 {
 						dx = L - dx
@@ -160,7 +159,6 @@ func processBruteForce(particles []*types.Particle, Rc float64, loop bool, L flo
 				}
 
 				if dist < Rc {
-					// Avoid duplicate additions
 					if pi.Id < pj.Id {
 						pi.AddNeighbor(pj)
 						pj.AddNeighbor(pi)
