@@ -2,6 +2,7 @@
 # https://github.com/github/gitignore/blob/main/community/Golang/Go.AllowList.gitignore
 #
 # Binaries for programs and plugins
+TP1-Sims
 *.exe
 *.exe~
 *.dll
@@ -30,5 +31,6 @@ ejemplo
 ejemplo.zip
 
 # Ignore input/output files
+*.txt
 files/
 output/
