@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"log"
-	"math"
 	"os"
 	"strconv"
 	"sync"
@@ -111,7 +110,7 @@ func processCellIndex(list []*types.Particle, L float64, M int, Rc float64, loop
 
 		go func() {
 			defer wg.Done()
-			processParticle(M, Rc, cells, jobs, loop)
+			processParticle(M, Rc, L, cells, jobs, loop)
 		}()
 	}
 
@@ -143,20 +142,7 @@ func processBruteForce(particles []*types.Particle, Rc float64, loop bool, L flo
 				}
 				pj := particles[j]
 
-				dist := pi.BorderDistanceTo(pj)
-				if loop {
-					dx := math.Abs(pi.X - pj.X)
-					if dx > L/2 {
-						dx = L - dx
-					}
-
-					dy := math.Abs(pi.Y - pj.Y)
-					if dy > L/2 {
-						dy = L - dy
-					}
-
-					dist = math.Sqrt(dx*dx+dy*dy) - pi.Radius - pj.Radius
-				}
+				dist := pi.BorderDistanceTo(pj, L, loop)
 
 				if dist < Rc {
 					if pi.Id < pj.Id {
@@ -170,7 +156,7 @@ func processBruteForce(particles []*types.Particle, Rc float64, loop bool, L flo
 	wg.Wait()
 }
 
-func processParticle(M int, Rc float64, cells [][][]*types.Particle, jobs <-chan Job, loop bool) {
+func processParticle(M int, Rc float64, L float64, cells [][][]*types.Particle, jobs <-chan Job, loop bool) {
 	for job := range jobs {
 		i, j, particle := job.X, job.Y, job.Particle
 
@@ -193,7 +179,7 @@ func processParticle(M int, Rc float64, cells [][][]*types.Particle, jobs <-chan
 			}
 
 			for _, other := range cells[x][y] {
-				if (!self_quadrant || particle.Id < other.Id) && particle.BorderDistanceTo(other) < Rc {
+				if (!self_quadrant || particle.Id < other.Id) && particle.BorderDistanceTo(other, L, loop) < Rc {
 					// This fortunately doesn't cause a deadlock
 					particle.AddNeighbor(other)
 					other.AddNeighbor(particle)

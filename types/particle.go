@@ -26,9 +26,19 @@ func NewParticle(id int, x, y, radius, property float64) *Particle {
 	}
 }
 
-func (p Particle) BorderDistanceTo(other *Particle) float64 {
-	dx := p.X - other.X
-	dy := p.Y - other.Y
+func (p *Particle) BorderDistanceTo(other *Particle, L float64, loop bool) float64 {
+	dx := math.Abs(p.X - other.X)
+	dy := math.Abs(p.Y - other.Y)
+
+	if loop {
+		if dx > L/2 {
+			dx = L - dx
+		}
+		if dy > L/2 {
+			dy = L - dy
+		}
+	}
+
 	return math.Sqrt(dx*dx+dy*dy) - (p.Radius + other.Radius)
 }
 
