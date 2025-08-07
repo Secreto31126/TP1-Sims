@@ -31,37 +31,52 @@ def read_particle_data(filename):
     return particles, neighbors
 
 def plot_particles(particles, focused_neighbors, focused_id=0):
-    """Visualizes particles with optional focus on one particle"""
-    plt.figure(figsize=(8, 8))
+    """Redrawable particle visualization"""
+    plt.clf()  # Clear previous plot instead of making new windows
+    
+    # Set up figure if it doesn't exist
+    if not plt.get_fignums():
+        plt.figure(figsize=(13, 13))
+        plt.ion()  # Turn on interactive mode
+        plt.show()
     
     # Plot all particles
     for particle in particles:
-        if(particle.id == focused_id):
-            particle_color = 'red'
-        elif(particle.id in focused_neighbors):
-            particle_color = 'blue'
-        else:
-            particle_color = 'grey'
-
-        circle = plt.Circle((particle.x, particle.y), particle.radius, 
-                          fill=False, color=particle_color)
-        plt.gca().add_patch(circle)
+        color = 'red' if particle.id == focused_id else \
+                'blue' if particle.id in focused_neighbors else \
+                'grey'
         
-    plt.title('Particle Playground')
+        circle = plt.Circle((particle.x, particle.y), particle.radius,
+                          fill=False, color=color, linewidth=1)
+        plt.gca().add_patch(circle)
+    
+    plt.title(f'Focused: {focused_id} | Neighbors: {len(focused_neighbors)}')
     plt.xlabel('X position')
     plt.ylabel('Y position')
     plt.axis('equal')
-    plt.grid(True)
-    plt.tight_layout()
-    plt.show()
+    # plt.grid(True)
+    # plt.tight_layout()
+    plt.draw()
+    plt.pause(0.1)  # Allow time for GUI update
 
-# Example usage:
 if __name__ == "__main__":
-    # Read all data from single file in alternating format
+    plt.ion()  # Enable interactive mode early
+    
+    # Data loading (unchanged)
     path = input('Enter the path of the file relative to the project root: ')
-    print(path)
     particles, neighbors = read_particle_data(path)
-    print(f"Read {len(particles)} particles from {path}")
-    # Visualize
-    focused_id = int(input('Enter the ID of the focused particle: '))
-    plot_particles(particles,neighbors[focused_id], focused_id)
+    print(f"Read {len(particles)} particles")
+    
+    # Interactive loop
+    while True:
+        inputstr = input('Enter particle ID (or "exit"): ').strip()
+        if inputstr.lower() == 'exit':
+            break
+        
+        try:
+            focused_id = int(inputstr)
+            plot_particles(particles, neighbors.get(focused_id, []), focused_id)
+        except ValueError:
+            print("Please enter a valid number or 'exit'")
+    
+    plt.close()
