@@ -39,7 +39,7 @@ func (p *Particle) BorderDistanceTo(other *Particle, L float64, loop bool) float
 		}
 	}
 
-	return math.Sqrt(dx*dx+dy*dy) - (p.Radius + other.Radius)
+	return math.Max(math.Sqrt(dx*dx+dy*dy)-(p.Radius+other.Radius), 0)
 }
 
 // Add a neighbor to the particle's neighbors list
