@@ -1,10 +1,10 @@
 {
   "M": 10,
   "L": 100,
-  "N": 1000,
-  "Rc": 50,
+  "N": 10000,
+  "Rc": 10,
   "Size": "",
   "method": "cell", 
-  "loop": true,
+  "loop": "loop",
   "particle": 54
 }

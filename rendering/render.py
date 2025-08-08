@@ -64,6 +64,7 @@ def plot_particles(particles, focused_neighbors, focused_id=0, square_size=5, L=
     # plt.tight_layout()
     plt.draw()
     plt.pause(0.1)  # Allow time for GUI update
+    plt.show(block=True)
 
 if __name__ == "__main__":
     plt.ion()  # Enable interactive mode early
@@ -76,12 +77,9 @@ if __name__ == "__main__":
     particles, neighbors = read_particle_data(path)
     print(f"Read {len(particles)} particles")
     
-    # Interactive loop
-    while True:
-        try:
-            focused_id = int(sys.argv[4])
-            plot_particles(particles, neighbors.get(focused_id, []), focused_id, np.floor(L/M), L)
-        except ValueError:
-            print("Please enter a valid number or 'exit'")
-    
-    plt.close()
+    try:
+        focused_id = int(sys.argv[4])
+        plot_particles(particles, neighbors.get(focused_id, []), focused_id, np.floor(L/M), L)
+    except ValueError:
+        print("Please enter a valid number or 'exit'")
+    # plt.close()

@@ -9,17 +9,17 @@ import json
 #   "Rc": 2.5,          float
 #   "Size": "",         empty string
 #   "method": "cell",   (cell|brute)    method used for finding neighbors
-#   "loop": true        boolean -> periodic contour
+#   "loop": "loop"        string -> periodic contour, loop is true, empty if false
 # }
 
 
 
 if __name__ == "__main__":
     args = []
-    toReturn = ''
     config = json.load(open("config/config.json"))
-    args = config.values()
-    for arg in args:
-        if arg != '':   #skip size value for now
-            toReturn += str(arg) + ' '
-    print(toReturn.strip())
+    for key, value in config.items():
+        if key == 'Size' and value == '':
+            continue  # skip empty Size as per your original logic
+        else:
+            args.append(str(value))
+    print(' '.join(args))

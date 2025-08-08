@@ -11,8 +11,8 @@ loop=$6
 particle=$7
 
 #Remove old files
-rm ./files/Static
-rm ./files/Dynamic
+rm ./files/Static.txt
+rm ./files/Dynamic.txt
 rm ./output.txt
 
 #Generate input for backend
