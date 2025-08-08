@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 from classes import Particle
 import numpy as np
+import sys
 
 def read_particle_data(filename):
     """Reads particle data in alternating format (properties then neighbors)"""
@@ -68,21 +69,17 @@ if __name__ == "__main__":
     plt.ion()  # Enable interactive mode early
     
     # Data loading (unchanged)
-    path = input('Enter the path of the file relative to the project root: ')
-    M = int(input('Grid number M: ').strip() if not '' else '10')
-    L = int(input('Contour size L: ') if not '' else '10')
+    path = sys.argv[1]
+    M = int(sys.argv[2])
+    L = int(sys.argv[3])
 
     particles, neighbors = read_particle_data(path)
     print(f"Read {len(particles)} particles")
     
     # Interactive loop
     while True:
-        inputstr = input('Enter particle ID (or "exit"): ').strip()
-        if inputstr.lower() == 'exit':
-            break
-        
         try:
-            focused_id = int(inputstr)
+            focused_id = int(sys.argv[4])
             plot_particles(particles, neighbors.get(focused_id, []), focused_id, np.floor(L/M), L)
         except ValueError:
             print("Please enter a valid number or 'exit'")
