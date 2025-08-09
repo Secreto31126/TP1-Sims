@@ -1,5 +1,6 @@
 
 import json
+import sys
 
 # Config format:
 # {
@@ -18,8 +19,14 @@ if __name__ == "__main__":
     args = []
     config = json.load(open("config/config.json"))
     for key, value in config.items():
-        if key == 'Size' and value == '':
+        if value == '':
             continue  # skip empty Size as per your original logic
         else:
             args.append(str(value))
+    M=float(args[0])
+    L=float(args[1])
+    Rc=float(args[3])
+    if (L/M < Rc + 0.52):
+        print('L/M < Rc...Select a smaller M',file=sys.stderr)
+        exit(1)
     print(' '.join(args))

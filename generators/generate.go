@@ -33,7 +33,7 @@ func main() {
 func static(N, L int) {
 	fmt.Printf("%d\n%d\n", N, L)
 	for range N {
-		fmt.Printf("%f\t%f\n", rand.Float64(), rand.Float64())
+		fmt.Printf("%f\t%f\n", rand.Float64()*0.02 + 0.24, rand.Float64()*0.02 + 0.24)
 	}
 }
 

@@ -20,7 +20,7 @@ type Job struct {
 func main() {
 	start := time.Now()
 	if len(os.Args) < 4 {
-		fmt.Print("Usage: go run main.go <M> <Rc> <Size> [cell|brute] [loop]\n")
+		fmt.Print("Usage: go run main.go <M> <Rc> <Size> [cell|brute] [periodic]\n")
 		os.Exit(1)
 	}
 
